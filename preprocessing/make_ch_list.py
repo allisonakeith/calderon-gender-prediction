@@ -5,7 +5,7 @@ import xml.etree.ElementTree as ET
 
 input_directory = '/Users/allisonkeith/calderon-gender-prediction/calderon-gender-prediction/tei_plays'
 
-output_CSV = ''
+output_CSV = '/Users/allisonkeith/calderon-gender-prediction/calderon-gender-prediction/gender_prediction_data.csv'
 
 # function that lemmatizes a string of text
 nlp = spacy.load('es_core_news_sm')
