@@ -71,7 +71,7 @@ for index, row in comedias_df.iterrows():
 
 sentence_df = pd.DataFrame(sentence_data)
 
-print(type(sentence_df['sentence'][0]))
+print(type(sentence_df['sentence'][0])) 
 
 sentence_df['sentence_length'] = sentence_df['sentence'].str.split().str.len()
 
