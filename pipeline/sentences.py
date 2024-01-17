@@ -28,11 +28,11 @@ import torch
 # %%
 character_file = '/projekte/tcl/users/keithan/projectcalderon/wp1-semantic-analysis/character_analysis/gender_analysis/gender_classifier/gender_prediction_data.csv'
 
-character_df = pd.read_csv(character_file, usecols = ['id','character_gender','character_id', 'character_sentences', 'character_utterances', 'genre', 'tokens', 'tokens_length'])
+comedias_df = pd.read_csv(character_file, usecols = ['id','character_gender','character_id', 'character_sentences', 'character_utterances', 'tokens', 'tokens_length'])
 
 #examine only the comedias
 
-comedias_df = character_df[(character_df.genre != 'auto sacramental') & (character_df.genre != 'loa') & (character_df.genre != 'auto sacramental - loa') & (character_df.character_gender != 'UNKNOWN')]
+comedias_df = comedias_df[(comedias_df.character_gender != 'UNKNOWN')]
 
 #drop nan values
 comedias_df = comedias_df.dropna()
@@ -62,13 +62,12 @@ for index, row in comedias_df.iterrows():
     is_male = row['is_male']
     id = row['id']
     character_id = row['character_id']
-    genre = row['genre']
     character_sentence_str = row['character_sentences']
     character_sentence_list = ast.literal_eval(character_sentence_str)
 
     for sentence in character_sentence_list:
         sentence = ''.join(sentence)
-        sentence_data.append({'is_male': is_male, 'sentence':sentence, 'id': id, 'character_id': character_id, 'genre': genre})
+        sentence_data.append({'is_male': is_male, 'sentence':sentence, 'id': id, 'character_id': character_id})
 
 sentence_df = pd.DataFrame(sentence_data)
 
@@ -82,60 +81,10 @@ sentence_df = sentence_df[sentence_df['sentence_length'] > 5]
 print(sentence_df.shape)
 
 # %% [markdown]
-# And the same for the utterances
-
-# %%
-utterance_data = []
-for index, row in comedias_df.iterrows():
-    is_male = row['is_male']
-    id = row['id']
-    character_id = row['character_id']
-    genre = row['genre']
-    character_utterance_str = row['character_utterances']
-    character_utterance_list = ast.literal_eval(character_utterance_str)
-
-    for utterance in character_utterance_list:
-        utterance = ''.join(utterance)
-        utterance_data.append({'is_male': is_male, 'utterance':utterance, 'id': id, 'character_id': character_id, 'genre': genre})
-
-utterance_df = pd.DataFrame(utterance_data)
-
-print(type(utterance_df['utterance'][0]))
-
-utterance_df['utterance_length'] = utterance_df['utterance'].str.split().str.len()
-
-
-
-utterance_df = utterance_df[utterance_df['utterance_length'] > 6]
-print(utterance_df.columns)
-
-
-# %%
-for index, row in utterance_df.iterrows():
-    if row['character_id'] == 'lindabridis':
-        print(row)
-
-# %% [markdown]
 # ## Creating the Test and Training Sets
 
 # %% [markdown]
 # Fist I want to ensure that the cross_dressed characters are removed from the training set, because we want to test on them later
-
-# %%
-cross_dressed_characters = ['lindabridis', 'claridiana', 'rosaura', 'eugenia', 'semíramis', 'ninias']
-cross_dressed_df = comedias_df[comedias_df['character_id'].isin(cross_dressed_characters)]
-print(cross_dressed_df.shape)
-
-tokens_df = comedias_df[~comedias_df['character_id'].isin(cross_dressed_characters)]
-print(tokens_df.shape)
-
-# %%
-cross_dressed_characters = ['lindabridis', 'claridiana', 'rosaura', 'eugenia', 'semíramis', 'ninias']
-cross_dressed_utterances = utterance_df[utterance_df['character_id'].isin(cross_dressed_characters)]
-print(cross_dressed_utterances.shape)
-
-utterance_df = utterance_df[~utterance_df['character_id'].isin(cross_dressed_characters)]
-print(utterance_df.shape)
 
 # %%
 cross_dressed_characters = ['lindabridis', 'claridiana', 'rosaura', 'eugenia', 'semíramis', 'ninias']
