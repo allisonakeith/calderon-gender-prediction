@@ -126,71 +126,71 @@ print(result.head())
 result.to_csv(output_CSV, index=False)
 
 
-###############################
-#since adding the the tokens didn't work, I'll merge the two dataframes
-###############################
-utterances_csv = '/Users/allisonkeith/calderon-gender-prediction/calderon-gender-prediction/character_utterances.csv'
-tokens_csv = '/Users/allisonkeith/VSCode_folder/projectcalderon/wp1-semantic-analysis/character_analysis/gender_analysis/topic_modeling/characters_with_clean_tokens.csv'
+# ###############################
+# #since adding the the tokens didn't work, I'll merge the two dataframes
+# ###############################
+# utterances_csv = '/Users/allisonkeith/calderon-gender-prediction/calderon-gender-prediction/character_utterances.csv'
+# tokens_csv = '/Users/allisonkeith/VSCode_folder/projectcalderon/wp1-semantic-analysis/character_analysis/gender_analysis/topic_modeling/characters_with_clean_tokens.csv'
 
 
-utterances_df = pd.read_csv(utterances_csv)
-tokens_df = pd.read_csv(tokens_csv)
+# utterances_df = pd.read_csv(utterances_csv)
+# tokens_df = pd.read_csv(tokens_csv)
 
-combined_df = utterances_df.combine_first(tokens_df)
-print(combined_df.head(20))
-for header in combined_df.columns:
-    print(header)
+# combined_df = utterances_df.combine_first(tokens_df)
+# print(combined_df.head(20))
+# for header in combined_df.columns:
+#     print(header)
 
-print(combined_df.head())
-
-
-combined_df.to_csv('/Users/allisonkeith/calderon-gender-prediction/calderon-gender-prediction/gender_prediction_data.csv', index = False)
-
-#############################################
-#try a different method
-#############################################
+# print(combined_df.head())
 
 
-#concatenate all the lists in the column 'character_utterances' which is a list of strings into a single string 
-df = pd.read_csv(utterances_csv)
+# combined_df.to_csv('/Users/allisonkeith/calderon-gender-prediction/calderon-gender-prediction/gender_prediction_data.csv', index = False)
 
-tokens = ''
-
-import ast
-
-df['character_utterances'] = df['character_utterances'].apply(ast.literal_eval)
-df['character_sentences'] = df['character_sentences'].apply(ast.literal_eval)
+# #############################################
+# #try a different method
+# #############################################
 
 
-df['tokens'] = df['character_utterances'].apply(lambda x: ' '.join(x))
+# #concatenate all the lists in the column 'character_utterances' which is a list of strings into a single string 
+# df = pd.read_csv(utterances_csv)
+
+# tokens = ''
+
+# import ast
+
+# df['character_utterances'] = df['character_utterances'].apply(ast.literal_eval)
+# df['character_sentences'] = df['character_sentences'].apply(ast.literal_eval)
 
 
-df.to_csv('/Users/allisonkeith/calderon-gender-prediction/calderon-gender-prediction/gender_prediction_data.csv', index = False)
-
-############################################## 
-#now count the number of words in df['tokens'] and add that to the dataframe
-##############################################
-utterances_csv = '/Users/allisonkeith/calderon-gender-prediction/calderon-gender-prediction/gender_prediction_data.csv'
-
-df = pd.read_csv(utterances_csv)
-
-print(df.loc[[2521]])
-print(df['tokens'][0])
-print(type(df['tokens'][0]))
-
-def string_length(string):
-    return len(str(string).split())
-
-df['tokens_length'] = df['tokens'].apply(string_length)
-
-# for index, row in df.iterrows():
-#     row['tokens_length'] = 0
-#     row['tokens_length'] = len(str(row['tokens']).split())
+# df['tokens'] = df['character_utterances'].apply(lambda x: ' '.join(x))
 
 
+# df.to_csv('/Users/allisonkeith/calderon-gender-prediction/calderon-gender-prediction/gender_prediction_data.csv', index = False)
 
-print(df.columns)
-print(df.head()[:5])
+# ############################################## 
+# #now count the number of words in df['tokens'] and add that to the dataframe
+# ##############################################
+# utterances_csv = '/Users/allisonkeith/calderon-gender-prediction/calderon-gender-prediction/gender_prediction_data.csv'
+
+# df = pd.read_csv(utterances_csv)
+
+# print(df.loc[[2521]])
+# print(df['tokens'][0])
+# print(type(df['tokens'][0]))
+
+# def string_length(string):
+#     return len(str(string).split())
+
+# df['tokens_length'] = df['tokens'].apply(string_length)
+
+# # for index, row in df.iterrows():
+# #     row['tokens_length'] = 0
+# #     row['tokens_length'] = len(str(row['tokens']).split())
 
 
-df.to_csv('/Users/allisonkeith/calderon-gender-prediction/calderon-gender-prediction/gender_prediction_data.csv', index = False)
+
+# print(df.columns)
+# print(df.head()[:5])
+
+
+# df.to_csv('/Users/allisonkeith/calderon-gender-prediction/calderon-gender-prediction/gender_prediction_data.csv', index = False)
