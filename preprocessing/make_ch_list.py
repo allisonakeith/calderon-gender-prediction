@@ -39,6 +39,7 @@ def get_speaker_tokens(root):
                             utterance += line.text + " "
                             #print("PRINTING LINE.TEXT")
                             #print(line.text)
+
                 utterances.append(utterance)
                 #remove empty strings from utterances
                 utterances = [x for x in utterances if x]
@@ -54,12 +55,16 @@ def get_speaker_tokens(root):
             sentences = []
             for utterance in utterances:
                 if utterance is not None:
-                    sentence = re.split(r'[.¡!¿?]+', utterance)
-                    sentences.append(sentence)
+                    split_utterance = re.split(r'[.¡!¿?]+', utterance)
+                    for sentence in split_utterance:
+                    #change sentence to type string
+                        sentence = re.sub(' +', ' ', sentence.strip())
+                        sentences.append(sentence)
+                    
 
             characterdict['sentences'] = sentences
-            print("PRINTING SENTENCES")
-            print(sentences)
+            # print("PRINTING SENTENCES")
+            # print(sentences)
                     
 
             characterlist.append(characterdict)
@@ -122,6 +127,42 @@ for file in os.listdir(input_directory):
 
 
 print(result.head())
+
+##################################################
+#now I'm going to clean up the utterances, sentences, and tokens, to get rid of extra spaces
+##################################################
+
+# for loc, row in result[:5].iterrows():
+#     utterance_list = []
+#     for utterances in row['character_utterances']:
+#         for utterance in utterances:
+#             utterance = re.sub(' +', ' ', utterance.strip())
+#             utterance_list.append(utterance)
+#     result.at[loc, 'character_utterances'] = [utterance_list]
+
+
+
+# for sentences in result[:5]['character_sentences']:
+#     sentence_list = []
+#     for sentence in sentences:
+#         for item in sentence:
+#             print(item)
+#             print(type(item))
+#             item = re.sub(' +', ' ', item.strip() + " THIS IS THE END OF THE SENTENCE")
+#             sentence_list.append(item)
+#     sentences = sentence_list
+
+
+# print(result[:5]['character_utterances'])
+# print(result[:5]['character_sentences'])
+
+
+
+
+
+##################################################
+# Now we'll write the dataframe to a CSV file to be used by the prediction model
+###################################################
             
 result.to_csv(output_CSV, index=False)
 
