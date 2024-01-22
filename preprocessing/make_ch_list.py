@@ -37,7 +37,7 @@ def get_speaker_tokens(root):
                     for line in speech.findall('.//tei:l', ns):
                         if line.text is not None:  # Check if line.text is not None
                             utterance += line.text
-                            utterance = re.sub(' +', ' ', utterance.strip()) 
+                            utterance = re.sub(' +', ' ', utterance) 
 
                     utterances.append(utterance)
                     print(type(utterance))                   
