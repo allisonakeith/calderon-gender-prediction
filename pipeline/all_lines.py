@@ -3,10 +3,7 @@
 
 # %%
 import pandas as pd
-from sentence_transformers import SentenceTransformer
 import numpy as np
-import matplotlib.pyplot as plt
-import ast
 
 # %% [markdown]
 # Now I'll import the libraries for the machine learning part
@@ -16,7 +13,6 @@ from sklearn.model_selection import train_test_split
 from transformers import XLMRobertaForSequenceClassification, XLMRobertaTokenizer, AutoModelForSequenceClassification, AutoTokenizer
 from torch.utils.data import Dataset, DataLoader
 from torch.optim import Adam
-import torch.nn.functional as F
 import torch
 
 # %% [markdown]
@@ -26,7 +22,7 @@ import torch
 # Now I'm going to import the dataset and make sure I'm only using the appropriate rows (only comedias, and only characters that have some dialogue)
 
 # %%
-character_file = '/projekte/tcl/users/keithan/projectcalderon/wp1-semantic-analysis/character_analysis/gender_analysis/gender_classifier/gender_prediction_data.csv'
+character_file = '/Users/allisonkeith/calderon-gender-prediction/calderon-gender-prediction/character_utterances.csv'
 
 character_df = pd.read_csv(character_file, usecols = ['id','character_gender','character_id', 'character_sentences', 'character_utterances', 'genre', 'tokens', 'tokens_length'])
 
