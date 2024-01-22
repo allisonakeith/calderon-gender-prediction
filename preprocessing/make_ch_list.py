@@ -26,9 +26,9 @@ def get_speaker_tokens(root):
         name = person.find('.//tei:persName', ns).text
         xml_id = person.get('{http://www.w3.org/XML/1998/namespace}id')
         if xml_id is not None:
-            characterdict = {'id': xml_id, 'Name': name, 'gender': person.get('sex'), 'tokens_length': '', 'tokens': [], 'utterances': [], 'sentences': []}
+            characterdict = {'id': xml_id, 'Name': name, 'gender': person.get('sex'), 'tokens_length': '', 'tokens': '', 'utterances': [], 'sentences': []}
             utterances = []
-            tokens = []
+            tokens = ''
             for speech in root.findall('.//tei:sp', ns):
                 speech_who = speech.get('who')
                 utterance = ""
@@ -36,18 +36,26 @@ def get_speaker_tokens(root):
                     # Speaker text is contained in lines with <l> tags
                     for line in speech.findall('.//tei:l', ns):
                         if line.text is not None:  # Check if line.text is not None
-                            utterance += line.text + " "
-                            #print("PRINTING LINE.TEXT")
-                            #print(line.text)
+                            utterance += line.text
+                            utterance = re.sub(' +', ' ', utterance.strip()) 
 
-                utterances.append(utterance)
-                #remove empty strings from utterances
-                utterances = [x for x in utterances if x]
+                    utterances.append(utterance)
+                    print(type(utterance))                   
+                    tokens += utterance     
+                    #remove empty strings from utterances
+                    #utterances = [x for x in utterances if x]
+            tokens = re.sub(' +', ' ', tokens.strip())
+
+
+                #Now make the tokens:
+                
+
+
                 
 
 
             characterdict['tokens'] = tokens
-            tokens_length = len(tokens)
+            tokens_length = len(tokens.split())
             characterdict['tokens_length'] = tokens_length
             characterdict['utterances'] = utterances
             #print("PRINTING UTTERANCES")
@@ -57,9 +65,9 @@ def get_speaker_tokens(root):
                 if utterance is not None:
                     split_utterance = re.split(r'[.¡!¿?]+', utterance)
                     for sentence in split_utterance:
-                    #change sentence to type string
                         sentence = re.sub(' +', ' ', sentence.strip())
-                        sentences.append(sentence)
+                        if sentence is not None and sentence != '' and sentence != ' ' and sentence != ')' and sentence != '(':
+                            sentences.append(sentence)
                     
 
             characterdict['sentences'] = sentences
@@ -99,7 +107,8 @@ def read_play_file(xml_file):
             'character_name': character['Name'],
             'character_gender': character['gender'],
             'words_spoken': character['tokens_length'],  # This is the number of words spoken by the character
-            'character_tokens': ' '.join(character['tokens']),  # Combine tokens into a single string
+            #'character_tokens': ' '.join(character['tokens']),  # Combine tokens into a single string
+            'character_tokens': character['tokens'],
             'character_utterances': character['utterances'],
             'character_sentences': character['sentences']
 
@@ -128,110 +137,9 @@ for file in os.listdir(input_directory):
 
 print(result.head())
 
-##################################################
-#now I'm going to clean up the utterances, sentences, and tokens, to get rid of extra spaces
-##################################################
-
-# for loc, row in result[:5].iterrows():
-#     utterance_list = []
-#     for utterances in row['character_utterances']:
-#         for utterance in utterances:
-#             utterance = re.sub(' +', ' ', utterance.strip())
-#             utterance_list.append(utterance)
-#     result.at[loc, 'character_utterances'] = [utterance_list]
-
-
-
-# for sentences in result[:5]['character_sentences']:
-#     sentence_list = []
-#     for sentence in sentences:
-#         for item in sentence:
-#             print(item)
-#             print(type(item))
-#             item = re.sub(' +', ' ', item.strip() + " THIS IS THE END OF THE SENTENCE")
-#             sentence_list.append(item)
-#     sentences = sentence_list
-
-
-# print(result[:5]['character_utterances'])
-# print(result[:5]['character_sentences'])
-
-
-
-
 
 ##################################################
 # Now we'll write the dataframe to a CSV file to be used by the prediction model
 ###################################################
             
 result.to_csv(output_CSV, index=False)
-
-
-# ###############################
-# #since adding the the tokens didn't work, I'll merge the two dataframes
-# ###############################
-# utterances_csv = '/Users/allisonkeith/calderon-gender-prediction/calderon-gender-prediction/character_utterances.csv'
-# tokens_csv = '/Users/allisonkeith/VSCode_folder/projectcalderon/wp1-semantic-analysis/character_analysis/gender_analysis/topic_modeling/characters_with_clean_tokens.csv'
-
-
-# utterances_df = pd.read_csv(utterances_csv)
-# tokens_df = pd.read_csv(tokens_csv)
-
-# combined_df = utterances_df.combine_first(tokens_df)
-# print(combined_df.head(20))
-# for header in combined_df.columns:
-#     print(header)
-
-# print(combined_df.head())
-
-
-# combined_df.to_csv('/Users/allisonkeith/calderon-gender-prediction/calderon-gender-prediction/gender_prediction_data.csv', index = False)
-
-# #############################################
-# #try a different method
-# #############################################
-
-
-# #concatenate all the lists in the column 'character_utterances' which is a list of strings into a single string 
-# df = pd.read_csv(utterances_csv)
-
-# tokens = ''
-
-# import ast
-
-# df['character_utterances'] = df['character_utterances'].apply(ast.literal_eval)
-# df['character_sentences'] = df['character_sentences'].apply(ast.literal_eval)
-
-
-# df['tokens'] = df['character_utterances'].apply(lambda x: ' '.join(x))
-
-
-# df.to_csv('/Users/allisonkeith/calderon-gender-prediction/calderon-gender-prediction/gender_prediction_data.csv', index = False)
-
-# ############################################## 
-# #now count the number of words in df['tokens'] and add that to the dataframe
-# ##############################################
-# utterances_csv = '/Users/allisonkeith/calderon-gender-prediction/calderon-gender-prediction/gender_prediction_data.csv'
-
-# df = pd.read_csv(utterances_csv)
-
-# print(df.loc[[2521]])
-# print(df['tokens'][0])
-# print(type(df['tokens'][0]))
-
-# def string_length(string):
-#     return len(str(string).split())
-
-# df['tokens_length'] = df['tokens'].apply(string_length)
-
-# # for index, row in df.iterrows():
-# #     row['tokens_length'] = 0
-# #     row['tokens_length'] = len(str(row['tokens']).split())
-
-
-
-# print(df.columns)
-# print(df.head()[:5])
-
-
-# df.to_csv('/Users/allisonkeith/calderon-gender-prediction/calderon-gender-prediction/gender_prediction_data.csv', index = False)
