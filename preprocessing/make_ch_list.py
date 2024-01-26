@@ -92,10 +92,6 @@ def read_play_file(xml_file):
     play_title = play_title_element.text
     print(play_title)
 
-
-    # Create an empty DataFrame
-    df = pd.DataFrame(columns=['play_title', 'character_id', 'character_name', 'character_gender', 'character_tokens','character_utterances','character_sentences'])
-
     character_data = []
 
     # Add rows for each character to the DataFrame
@@ -107,19 +103,15 @@ def read_play_file(xml_file):
             'character_name': character['Name'],
             'character_gender': character['gender'],
             'words_spoken': character['tokens_length'],  # This is the number of words spoken by the character
-            #'character_tokens': ' '.join(character['tokens']),  # Combine tokens into a single string
-            'character_tokens': character['tokens'],
-            'character_utterances': character['utterances'],
-            'character_sentences': character['sentences']
+            'tokens': character['tokens'],
+            'utterances': character['utterances'],
+            'sentences': character['sentences']
 
         })
 
     df = pd.DataFrame(character_data)
     print(type(df))
     return df
-
-#creat a dataframe with all the plays
-maindf = pd.DataFrame(columns=['id','play_title','character_id','character_name','character_gender','character_tokens', 'character_utterances', 'character_sentences'])
 
 dfs = []
 
