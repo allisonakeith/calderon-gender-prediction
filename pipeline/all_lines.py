@@ -24,15 +24,15 @@ import torch
 # %%
 character_file = '/Users/allisonkeith/calderon-gender-prediction/calderon-gender-prediction/character_utterances.csv'
 
-character_df = pd.read_csv(character_file, usecols = ['id','character_gender','character_id', 'character_sentences', 'character_utterances', 'genre', 'tokens', 'tokens_length'])
+character_df = pd.read_csv(character_file, usecols = ['id','gender','id', 'sentences', 'utterances', 'genre', 'tokens', 'words_spoken'])
 
 #examine only the comedias
 
-comedias_df = character_df[(character_df.genre != 'auto sacramental') & (character_df.genre != 'loa') & (character_df.genre != 'auto sacramental - loa') & (character_df.character_gender != 'UNKNOWN')]
+comedias_df = character_df[(character_df.genre != 'auto sacramental') & (character_df.genre != 'loa') & (character_df.genre != 'auto sacramental - loa') & (character_df.gender != 'UNKNOWN')]
 
 #drop nan values
 comedias_df = comedias_df.dropna()
-comedias_df = comedias_df[comedias_df['tokens_length'] > 10]
+comedias_df = comedias_df[comedias_df['num_tokens'] > 10]
 print(comedias_df.shape)
 
 # %% [markdown]
@@ -42,7 +42,7 @@ print(comedias_df.shape)
 #########################
 #create a column called "is_male"
 #########################
-comedias_df['is_male'] = np.where(comedias_df['character_gender'] == 'MALE', 1, 0)
+comedias_df['is_male'] = np.where(comedias_df['gender'] == 'MALE', 1, 0)
 print(comedias_df.head())
 
 # %% [markdown]
@@ -53,10 +53,10 @@ print(comedias_df.head())
 
 # %%
 cross_dressed_characters = ['lindabridis', 'claridiana', 'rosaura', 'eugenia', 'semíramis', 'ninias']
-cross_dressed_df = comedias_df[comedias_df['character_id'].isin(cross_dressed_characters)]
+cross_dressed_df = comedias_df[comedias_df['id'].isin(cross_dressed_characters)]
 print(cross_dressed_df.shape)
 
-tokens_df = comedias_df[~comedias_df['character_id'].isin(cross_dressed_characters)]
+tokens_df = comedias_df[~comedias_df['id'].isin(cross_dressed_characters)]
 print(tokens_df.shape)
 
 ######################################
@@ -185,15 +185,6 @@ def test_model(model, test_dataset):
     accuracy = total_correct / total_samples
     return accuracy, all_predictions, all_probabilities
 
-# # %%
-# accuracy, all_predictions = test_model(model, test_dataset)
-# print("Accuracy: ", accuracy)
-
-# #write predictions into the dataframe
-# test_data['predictions'] = all_predictions
-
-# #test_data.to_csv('/projekte/tcl/users/keithan/projectcalderon/wp1-semantic-analysis/character_analysis/gender_analysis/gender_classifier/results/before_training_gender_predictions.csv', index=False)
-# print(test_data['predictions'].value_counts())
 
 # %%
 def train_model(model, train_dataset, test_dataset):
