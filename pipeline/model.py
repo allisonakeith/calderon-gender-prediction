@@ -117,7 +117,7 @@ for column_of_interest in ['tokens','scenes', 'utterances']: #'tokens',,'utteran
     val_data['probabilities'] = all_probabilities
 
 
-    file_name = f"calderon-gender-prediction/results/june7_{column_of_interest}_{model_name}_{lr}_{batch_size}_{best_epoch}.csv"
+    file_name = f"calderon-gender-prediction/results/{column_of_interest}_{model_name}_{lr}_{batch_size}_{best_epoch}.csv"
     val_data.to_csv(file_name, index=False)
 
     attribution = 1
@@ -141,6 +141,6 @@ for column_of_interest in ['tokens','scenes', 'utterances']: #'tokens',,'utteran
 
         #output word attributions to a file
         word_attributions_df = pd.DataFrame(word_attributions)
-        word_attributions_df.to_csv(f"calderon-gender-prediction/results/june7_{column_of_interest}_word_attributions.csv", index=False)
+        word_attributions_df.to_csv(f"calderon-gender-prediction/results/{column_of_interest}_word_attributions.csv", index=False)
         attribution += 1
 

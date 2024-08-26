@@ -23,11 +23,9 @@ The files are listed here in the order they should be run:
         Contains the functions to analyze the results of the pipeline - this is where we get precision, recall, and f1 scores
     2. interpret_attributions.ipynb
         Contains the functions to interpret the attributions of the model - here we see the words with the most extreme attributions
-    4. visualize.ipynb
-        I created a personalized visualization function based on the visualizaiton from TransformersInterpret 
-    3. find_context.ipynb
-        Contains the functions to find the context of the most extreme attributions in the plays
-    4. scene_level.ipynb
+        - visualize.ipynb
+            I created a personalized visualization function based on the visualizaiton from TransformersInterpret 
+    3. scene_level.ipynb
         Allows us to anaylze the character results at the scene level. Specifically, we use this to analyze the predictions of cross-dressing characters.
 
 
